@@ -1,0 +1,21 @@
+language: go
+dist: xenial
+
+go:
+- 1.12
+
+go_import_path: go.coder.com/sail
+
+install: true
+env:
+  - GO111MODULE=on
+script:
+  - ci/build.sh
+  - go test ./...
+
+deploy:
+  provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file: "bin/sail-linux-amd64"
+  skip_cleanup: true
+  draft: true
