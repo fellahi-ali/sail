@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/url"
 	"path"
@@ -18,7 +19,11 @@ type repo struct {
 }
 
 func (r repo) CloneURI() string {
-	return r.String()
+	uri := r.String()
+	if !strings.HasSuffix(uri, ".git") {
+		return fmt.Sprintf("%s.git", uri)
+	}
+	return uri
 }
 
 func (r repo) DockerName() string {
@@ -67,6 +72,9 @@ func parseRepo(defaultSchema, name string) (repo, error) {
 
 	// make sure path doesn't have a leading forward slash
 	r.Path = strings.TrimPrefix(r.Path, "/")
+
+	// make sure the path doesn't have a trailing .git
+	r.Path = strings.TrimSuffix(r.Path, ".git")
 
 	// non-existent or invalid path
 	if r.Path == "" || len(strings.Split(r.Path, "/")) != 2 {

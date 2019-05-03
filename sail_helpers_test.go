@@ -123,6 +123,10 @@ func requireNoRunningSailContainers(t *testing.T) {
 	}
 }
 
+func requireUbuntuDevImage(t *testing.T) {
+	require.NoError(t, ensureImage("codercom/ubuntu-dev"))
+}
+
 func requireGetImageLabels(t *testing.T, image string) map[string]string {
 	return requireImageInspect(t, image).ContainerConfig.Labels
 }

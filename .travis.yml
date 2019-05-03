@@ -1,5 +1,8 @@
 language: go
+
 dist: xenial
+services:
+  - docker
 
 go:
 - 1.12
@@ -11,7 +14,7 @@ env:
   - GO111MODULE=on
 script:
   - ci/build.sh
-  - go test ./...
+  - go test -v ./...
 
 deploy:
   provider: releases

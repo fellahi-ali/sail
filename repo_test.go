@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestParseRepo(t *testing.T) {
+func Test_parseRepo(t *testing.T) {
 	var tests = []struct {
 		defSchema string
 		fullPath  string
@@ -26,7 +26,7 @@ func TestParseRepo(t *testing.T) {
 			"github.com",
 			"git",
 			"ssh",
-			"ssh://git@github.com/cdr/sail",
+			"ssh://git@github.com/cdr/sail.git",
 		},
 		// ensure default schemas works as expected
 		{
@@ -36,7 +36,7 @@ func TestParseRepo(t *testing.T) {
 			"github.com",
 			"",
 			"http",
-			"http://github.com/cdr/sail",
+			"http://github.com/cdr/sail.git",
 		},
 		// ensure default schemas works as expected
 		{
@@ -46,7 +46,7 @@ func TestParseRepo(t *testing.T) {
 			"github.com",
 			"",
 			"https",
-			"https://github.com/cdr/sail",
+			"https://github.com/cdr/sail.git",
 		},
 		// http url parses correctly
 		{
@@ -56,13 +56,13 @@ func TestParseRepo(t *testing.T) {
 			"github.com",
 			"",
 			"https",
-			"https://github.com/cdr/sail",
+			"https://github.com/cdr/sail.git",
 		},
 		// git url with username and without schema parses correctly
 		{
 			"ssh",
 			"git@github.com/cdr/sail.git",
-			"cdr/sail.git",
+			"cdr/sail",
 			"github.com",
 			"git",
 			"ssh",
@@ -76,7 +76,7 @@ func TestParseRepo(t *testing.T) {
 			"github.com",
 			"git",
 			"ssh",
-			"ssh://git@github.com/cdr/sail",
+			"ssh://git@github.com/cdr/sail.git",
 		},
 	}
 
