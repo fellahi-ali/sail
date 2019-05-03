@@ -250,7 +250,9 @@ func (p *project) waitOnline() error {
 	cli := dockerClient()
 	defer cli.Close()
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	// Give a pretty significant amount of time since the `chown -R` call from
+	// fixuid can take a long time if the project codebase is large.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
 	for ctx.Err() == nil {

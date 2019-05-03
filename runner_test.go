@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,29 +40,6 @@ func Test_runner(t *testing.T) {
 		})
 	}
 
-	// loadFromContainer ensures that our state is properly stored
-	// on the container and can rebuild our in memory structures
-	// correctly.
-	loadFromContainer := func(t *testing.T, p *params) {
-		t.Run("FromContainer", func(t *testing.T) {
-			// 	bldr, err := hatBuilderFromContainer(p.proj.cntName())
-			// 	require.NoError(t, err)
-
-			// 	assert.Equal(t, p.bldr.hatPath, bldr.hatPath)
-			// 	assert.Equal(t, p.bldr.baseImage, bldr.baseImage)
-
-			// 	runner, err := runnerFromContainer(p.proj.cntName())
-			// 	require.NoError(t, err)
-
-			// 	assert.Equal(t, p.runner.cntName, runner.cntName)
-			// 	assert.Equal(t, p.runner.hostname, runner.hostname)
-			// 	assert.Equal(t, p.runner.port, runner.port)
-			// 	assert.Equal(t, p.runner.projectLocalDir, runner.projectLocalDir)
-			// 	assert.Equal(t, p.runner.projectName, runner.projectName)
-			// 	assert.Equal(t, p.runner.testCmd, runner.testCmd)
-		})
-	}
-
 	// codeServerStarts ensures that the code server process
 	// starts up inside the container.
 	codeServerStarts := func(t *testing.T, p *params) {
@@ -71,27 +49,50 @@ func Test_runner(t *testing.T) {
 		})
 	}
 
+	// loadFromContainer ensures that our state is properly stored
+	// on the container and can rebuild our in memory structures
+	// correctly.
+	loadFromContainer := func(t *testing.T, p *params) {
+		t.Run("FromContainer", func(t *testing.T) {
+			bldr, err := hatBuilderFromContainer(p.proj.cntName())
+			require.NoError(t, err)
+
+			assert.Equal(t, p.bldr.hatPath, bldr.hatPath)
+			assert.Equal(t, p.bldr.baseImage, bldr.baseImage)
+
+			runner, err := runnerFromContainer(p.proj.cntName())
+			require.NoError(t, err)
+
+			assert.Equal(t, p.runner.cntName, runner.cntName)
+			assert.Equal(t, p.runner.hostname, runner.hostname)
+			assert.Equal(t, p.runner.port, runner.port)
+			assert.Equal(t, p.runner.projectLocalDir, runner.projectLocalDir)
+			assert.Equal(t, p.runner.projectName, runner.projectName)
+			assert.Equal(t, p.runner.testCmd, runner.testCmd)
+		})
+	}
+
 	run(t, "BaseImageNoHat", "https://github.com/cdr/nbin", "",
 		labelChecker,
-		loadFromContainer,
 		codeServerStarts,
+		loadFromContainer,
 	)
 
 	run(t, "BaseImageHat", "https://github.com/cdr/flog", "./hat-examples/fish",
 		labelChecker,
-		loadFromContainer,
 		codeServerStarts,
+		loadFromContainer,
 	)
 
 	run(t, "ProjImageNoHat", "https://github.com/cdr/bigdur", "",
 		labelChecker,
-		loadFromContainer,
 		codeServerStarts,
+		loadFromContainer,
 	)
 
 	run(t, "ProjImageHat", "https://github.com/cdr/sshcode", "./hat-examples/net",
 		labelChecker,
-		loadFromContainer,
 		codeServerStarts,
+		loadFromContainer,
 	)
 }
