@@ -13,6 +13,7 @@ install: true
 env:
   - GO111MODULE=on
 script:
+  - env
   - ci/build.sh
   - cat /etc/passwd
   - sudo usermod -u 1000 travis
