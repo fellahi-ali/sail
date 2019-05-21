@@ -88,10 +88,7 @@ func (p *proxy) getCodeServerPort() (string, error) {
 }
 
 func (p *proxy) refreshPort() {
-	// Give a longer period of time since the chown process in fixuid can take a bit
-	// to complete. This only happens if the uid:gid on the host isn't already 1000:1000.
-	// TODO: optimize fixuid and chown.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
 	atomic.StoreInt64(&p.refreshing, 1)

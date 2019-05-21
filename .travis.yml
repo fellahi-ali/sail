@@ -14,6 +14,7 @@ env:
   - GO111MODULE=on
 script:
   - ci/build.sh
+  - cat /etc/passwd
   - sudo usermod -u 1000 travis
   - sudo groupmod -g 1000 travis
   - go test -v ./...

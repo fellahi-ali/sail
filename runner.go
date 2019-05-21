@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
-	"os/user"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -81,11 +80,6 @@ func (r *runner) runContainer(image string) error {
 		return err
 	}
 
-	u, err := user.Current()
-	if err != nil {
-		return err
-	}
-
 	var envs []string
 	envs = r.environment(envs)
 
@@ -103,7 +97,10 @@ func (r *runner) runContainer(image string) error {
 			projectNameLabel:     r.projectName,
 			proxyURLLabel:        r.proxyURL,
 		},
-		User: fmt.Sprintf("%s:%s", u.Uid, u.Gid),
+		// The user inside has uid 1000. This works even on macOS where the default user has uid 501.
+		// See https://stackoverflow.com/questions/43097341/docker-on-macosx-does-not-translate-file-ownership-correctly-in-volumes
+		// The docker image runs it as uid 1000 so we don't need to set anything.
+		User: "",
 	}
 
 	err = r.addImageDefinedLabels(image, containerConfig.Labels)
